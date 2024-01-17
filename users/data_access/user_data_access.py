@@ -15,10 +15,10 @@ class UserDataAccess:
 
     @classmethod
     def get_user(cls, user_id, is_deleted=None):
-        query_filter = {}
+        query_filter = {'id': user_id}
         if is_deleted is not None:
             query_filter['is_deleted'] = is_deleted
-        user = User.objects.get(id=user_id, **query_filter)
+        user = User.objects.get(**query_filter)
         return user
 
     @classmethod

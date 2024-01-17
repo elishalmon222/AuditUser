@@ -19,7 +19,9 @@ class UserSerializer(rfs.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'is_deleted'
         )
+        read_only_fields = ('is_deleted',)
 
 
 class UserActionSerializer(rfs.ModelSerializer):

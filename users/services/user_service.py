@@ -1,6 +1,7 @@
 from rest_framework import status
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from django.db import transaction
 
 from users.consts import Action
 from users.data_access.user_data_access import UserDataAccess
@@ -37,7 +38,6 @@ class UserService:
             user = cls.data_access.get_user(user_id)
         except User.DoesNotExist:
             return Response('user does not exists', status=status.HTTP_404_NOT_FOUND)
-        # user = cls.get_user_by_id(user_id)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
@@ -47,7 +47,6 @@ class UserService:
             user = cls.data_access.get_user(user_id)
         except User.DoesNotExist:
             return Response('user does not exists', status=status.HTTP_404_NOT_FOUND)
-        # user = cls.get_user_by_id(user_id)
         try:
             validated_data = get_validated_data(data, UserSerializer, context={'update': True}, partial=partial)
         except ValidationError as validation_error:
@@ -57,19 +56,19 @@ class UserService:
         return Response(serializer.data)
 
     @classmethod
-    def get_user_by_id(cls, user_id):
-        try:
-            user = cls.data_access.get_user(user_id)
-        except User.DoesNotExist:
-            raise NotFound(f'user does not exists.')
-        return user
-
-    @classmethod
     def delete_user(cls, user_id):
         try:
             user = cls.data_access.get_user(user_id, is_deleted=False)
+            with transaction.atomic():
+                """
+                This block is atomic so mark user as deleted
+                and creation of deleted action will commit to DB in the same time.
+                """
+                cls.data_access.delete_user(user)
+                cls.user_action_service.create_user_action(
+                    {'user': user, 'action': Action.DELETED},
+                    for_delete=True
+                )
+                return Response(status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             return Response('user does not exists', status=status.HTTP_404_NOT_FOUND)
-        cls.data_access.delete_user(user)
-        cls.user_action_service.create_user_action({'user': user, 'action': Action.DELETED}, for_delete=True)
-        return Response(status=status.HTTP_204_NO_CONTENT)

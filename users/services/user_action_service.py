@@ -14,6 +14,9 @@ class UserActionService:
     @classmethod
     def create_user_action(cls, data, for_delete=False):
         if for_delete:
+            """
+            create delete user action, no need to return user action object
+            """
             cls.data_access.create_user_action(**data)
             return
         try:
