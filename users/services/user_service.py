@@ -7,12 +7,7 @@ from users.data_access.user_data_access import UserDataAccess
 from users.models import User
 from users.serializers import UserSerializer
 from users.services.user_action_service import UserActionService
-
-
-def get_validated_data(data, serializer_class, context=None, partial=False):
-    serializer = serializer_class(data=data, partial=partial, context=context)
-    serializer.is_valid(raise_exception=True)
-    return serializer.validated_data
+from users.utils import get_validated_data
 
 
 class UserService:

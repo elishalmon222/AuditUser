@@ -4,12 +4,7 @@ from rest_framework.response import Response
 
 from users.data_access.user_action_data_access import UserActionDataAccess
 from users.serializers import UserActionSerializer
-
-
-def get_validated_data(data, serializer_class, context=None, partial=False):
-    serializer = serializer_class(data=data, partial=partial, context=context)
-    serializer.is_valid(raise_exception=True)
-    return serializer.validated_data
+from users.utils import get_validated_data
 
 
 class UserActionService:
