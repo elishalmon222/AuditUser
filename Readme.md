@@ -5,7 +5,7 @@
 To run the project: Clone the repository and open it in the command line:
 ```
 git clone https://github.com/elishalmon222/AuditUser.git
-cd AuditUser
+cd UserAudit
 ```
 Create and activate a virtual environment:
 ```
@@ -16,7 +16,7 @@ Install the dependencies from the *requirements.txt* file:
 ```
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-cd messaging_system
+cd UserAudit
 ```
 
 Run migrations:
