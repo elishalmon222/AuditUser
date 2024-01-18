@@ -32,3 +32,12 @@ Launch the project:
 python manage.py runserver
 ```
 Starting development server at http://127.0.0.1:8000/
+
+
+### A Postman collection is attached to the main folder of this Repository
+
+### Valid User Actions:
+    'deleted'
+    'restarted_computer'
+    'went_running'
+    'baked_cake' 
